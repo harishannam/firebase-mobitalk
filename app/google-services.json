@@ -1,0 +1,48 @@
+{
+  "project_info": {
+    "project_number": "849802695470",
+    "firebase_url": "https://mobitalk-test.firebaseio.com",
+    "project_id": "mobitalk-test",
+    "storage_bucket": "mobitalk-test.appspot.com"
+  },
+  "client": [
+    {
+      "client_info": {
+        "mobilesdk_app_id": "1:849802695470:android:bd9d6ab29bb3392f",
+        "android_client_info": {
+          "package_name": "com.paypal.firebasemobitalk"
+        }
+      },
+      "oauth_client": [
+        {
+          "client_id": "849802695470-airuvor5o3c1rabrggthutnkt1bi71e7.apps.googleusercontent.com",
+          "client_type": 1,
+          "android_info": {
+            "package_name": "com.paypal.firebasemobitalk",
+            "certificate_hash": "1bd565c3ea11b46d188078d52438b51751817517"
+          }
+        },
+        {
+          "client_id": "849802695470-g0mm672pc69cpi73if9as0sabkd4ti1q.apps.googleusercontent.com",
+          "client_type": 3
+        }
+      ],
+      "api_key": [
+        {
+          "current_key": "AIzaSyDxZhzL77HIjj1ajlDUR2vVzYvhWhSyAyU"
+        }
+      ],
+      "services": {
+        "appinvite_service": {
+          "other_platform_oauth_client": [
+            {
+              "client_id": "849802695470-g0mm672pc69cpi73if9as0sabkd4ti1q.apps.googleusercontent.com",
+              "client_type": 3
+            }
+          ]
+        }
+      }
+    }
+  ],
+  "configuration_version": "1"
+}
