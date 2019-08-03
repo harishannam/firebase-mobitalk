@@ -25,7 +25,6 @@ import androidx.appcompat.app.AppCompatActivity;
 public class LoginActivity extends AppCompatActivity implements View.OnClickListener {
 
     private FirebaseAuth mAuth;
-    private FirebaseRemoteConfig mFirebaseRemoteConfig;
     private EditText mUsername;
     private EditText mPassword;
 
@@ -33,27 +32,8 @@ public class LoginActivity extends AppCompatActivity implements View.OnClickList
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
         mAuth = FirebaseAuth.getInstance();
-        mFirebaseRemoteConfig = FirebaseRemoteConfig.getInstance();
-
-        FirebaseRemoteConfigSettings configSettings = new FirebaseRemoteConfigSettings.Builder()
-                .setDeveloperModeEnabled(BuildConfig.DEBUG)
-                .setMinimumFetchIntervalInSeconds(3600)
-                .build();
-        mFirebaseRemoteConfig.setConfigSettingsAsync(configSettings);
 
         setContentView(R.layout.activity_login);
-
-        mFirebaseRemoteConfig.fetch()
-                .addOnCompleteListener(LoginActivity.this, new OnCompleteListener<Void>() {
-                    @Override
-                    public void onComplete(@NonNull Task<Void> task) {
-                        if (task.isSuccessful()) {
-                            mFirebaseRemoteConfig.activateFetched();
-
-                            configFetched();
-                        }
-                    }
-                });
 
         mUsername = findViewById(R.id.text_username);
         mPassword = findViewById(R.id.text_password);
@@ -66,13 +46,9 @@ public class LoginActivity extends AppCompatActivity implements View.OnClickList
     protected void onStart() {
         super.onStart();
 
-        FirebaseUser currentUser = mAuth.getCurrentUser();
-//        Log.e("Current User : ", currentUser.toString());
-    }
-
-    private void configFetched() {
-        String welcomeMessage = mFirebaseRemoteConfig.getString("show_ios_message");
-        Log.e("configFetched : ", welcomeMessage);
+        if (mAuth.getCurrentUser() != null) {
+            loginSuccess();
+        }
     }
 
     @Override
@@ -104,9 +80,7 @@ public class LoginActivity extends AppCompatActivity implements View.OnClickList
                             loginSuccess();
                         } else {
                             // If sign up fails, display a message to the user.
-                            Log.w("REGISTER : ", "createUserWithEmail:failure", task.getException());
-                            Toast.makeText(LoginActivity.this, "Authentication failed.",
-                                    Toast.LENGTH_SHORT).show();
+                            loginFailed("Authentication failed.");
                         }
                     }
                 });
@@ -128,9 +102,7 @@ public class LoginActivity extends AppCompatActivity implements View.OnClickList
                             loginSuccess();
                         } else {
                             // If sign in fails, display a message to the user.
-                            Log.w("LOGIN : ", "signInWithEmailAndPassword:failure", task.getException());
-                            Toast.makeText(LoginActivity.this, "Authentication failed.",
-                                    Toast.LENGTH_SHORT).show();
+                            loginFailed("Authentication failed.");
                         }
                     }
                 });
@@ -172,7 +144,8 @@ public class LoginActivity extends AppCompatActivity implements View.OnClickList
     }
 
     private void loginFailed(String message) {
-
+        Toast.makeText(LoginActivity.this, message,
+                Toast.LENGTH_SHORT).show();
     }
 
     @Override
@@ -188,7 +161,6 @@ public class LoginActivity extends AppCompatActivity implements View.OnClickList
             System.exit(0);
             return true;
         }
-
         return super.onOptionsItemSelected(item);
     }
 }

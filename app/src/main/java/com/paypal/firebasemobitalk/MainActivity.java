@@ -9,6 +9,8 @@ import android.view.Menu;
 import android.view.MenuItem;
 import android.view.View;
 import android.widget.EditText;
+import android.widget.ImageButton;
+import android.widget.ImageView;
 import android.widget.TextView;
 import android.widget.Toast;
 
@@ -47,40 +49,22 @@ public class MainActivity extends AppCompatActivity implements View.OnClickListe
 
         setContentView(R.layout.activity_main);
 
-        mLikes = new Random().nextInt(10);
-        mLikeCount = findViewById(R.id.like_count);
-        mLikeCount.setText("(" + mLikes + ")");
-        findViewById(R.id.thumb_image).setOnClickListener(this);
-       /* mFirebaseRemoteConfig.fetch()
+        mFirebaseRemoteConfig.fetch()
                 .addOnCompleteListener(MainActivity.this, new OnCompleteListener<Void>() {
                     @Override
                     public void onComplete(@NonNull Task<Void> task) {
                         if (task.isSuccessful()) {
                             mFirebaseRemoteConfig.activateFetched();
-
-                            configFetched();
+                            if (isLikeFeatureEnabled()) {
+                                setupLikeFeature();
+                            }
                         }
                     }
                 });
-
-        mUsername = findViewById(R.id.text_username);
-        mPassword = findViewById(R.id.text_password);
-
-        findViewById(R.id.registerbtn).setOnClickListener(this);
-        findViewById(R.id.loginbtn).setOnClickListener(this);*/
     }
 
-    @Override
-    protected void onStart() {
-        super.onStart();
-
-        FirebaseUser currentUser = mAuth.getCurrentUser();
-//        Log.e("Current User : ", currentUser.toString());
-    }
-
-    private void configFetched() {
-        String welcomeMessage = mFirebaseRemoteConfig.getString("show_ios_message");
-        Log.e("configFetched : ", welcomeMessage);
+    private boolean isLikeFeatureEnabled() {
+        return mFirebaseRemoteConfig.getBoolean("FeatureFlag_LikeImage");
     }
 
     @Override
@@ -114,9 +98,22 @@ public class MainActivity extends AppCompatActivity implements View.OnClickListe
     }
 
     private void doFirebaseLogout() {
+        mAuth.signOut();
         Intent intent = new Intent(this, LoginActivity.class);
         intent.addFlags(Intent.FLAG_ACTIVITY_CLEAR_TOP | Intent.FLAG_ACTIVITY_NEW_TASK);
         startActivity(intent);
         finish();
+    }
+
+    private void setupLikeFeature() {
+        mLikes = new Random().nextInt(10);
+        mLikeCount = findViewById(R.id.like_count);
+        mLikeCount.setText("(" + mLikes + ")");
+        ImageButton imageThumb = findViewById(R.id.thumb_image);
+
+        imageThumb.setVisibility(View.VISIBLE);
+        mLikeCount.setVisibility(View.VISIBLE);
+
+        imageThumb.setOnClickListener(this);
     }
 }
